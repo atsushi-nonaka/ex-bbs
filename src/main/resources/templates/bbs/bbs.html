@@ -7,32 +7,35 @@
 <body>
 	<h1>掲示板アプリケーション</h1>
 	
-	<form th:action="@{/insert}" method="post">
+	<form th:action="@{/insert-article}" method="post">
 		投稿者名：<input type="text" name="name"><br>
 		投稿内容：
 		<textarea name="content"></textarea><br>
 		<button>記事投稿</button>
 	</form>
 	
-	<form th:each="article : ${articleList}" >
+	<div th:each="article : ${articleList}" >
 		<hr>
-		<div th:text="投稿ID： + ${article.id}"></div>
-		<div th:text="投稿者名： +  ${article.name}"></div>
-		<div th:text="投稿内容： +  ${article.content}"></div>
-		<button>記事削除</button>
+		<form>
+			<div th:text="投稿ID： + ${article.id}"></div>
+			<div th:text="投稿者名： +  ${article.name}"></div>
+			<div th:text="投稿内容： +  ${article.content}"></div>
+			<button>記事削除</button>
+		</form>
+		
 		<div th:each="comment : ${article.commentList}">
 			<div th:text="コメントID： + ${comment.id}"></div>
 			<div th:text="コメント名： + ${comment.name}"></div>
 			<div th:text="コメント内容： + ${comment.content}"></div>
 		</div>
-			
-	</form>
-	
-	<form method="post">
-		名前：<input type="text" name="name"><br>
-		コメント：
-		<textarea name="content"></textarea><br>
-		<button>コメント投稿</button>
-	</form>
+		
+		<form method="post" th:action="@{insert-comment}">
+			名前：<input type="text" name="name"><br>
+			コメント：
+			<textarea name="content"></textarea><br>
+			<input type="hidden" name="articleId" th:value="${article.id}">
+			<button>コメント投稿</button>
+		</form>
+	</div>
 </body>
 </html>

@@ -58,11 +58,32 @@ public class ArticleController {
 		return "bbs/bbs";
 	}
 	
-	@RequestMapping("insert")
-	public String insertArticle(ArticleForm articleForm ,Model model) {
+	/**
+	 * 記事を登録する.
+	 * 
+	 * @param articleForm 記事フォーム
+	 * @return リダイレクト
+	 */
+	@RequestMapping("insert-article")
+	public String insertArticle(ArticleForm articleForm) {
 		Article article = new Article();
 	    BeanUtils.copyProperties(articleForm, article);
 	    articleRepository.insert(article);
-	    return index(model);
+	    return "redirect:/";
+	}
+	
+	/**
+	 * コメントを登録する.
+	 * 
+	 * @param commentForm コメントフォーム
+	 * @return リダイレクト
+	 */
+	@RequestMapping("insert-comment")
+	public String insertComment(CommentForm commentForm) {
+		Comment comment = new Comment();
+		BeanUtils.copyProperties(commentForm, comment);
+		comment.setArticleId(commentForm.getIntArticleId());
+		commentRepository.insert(comment);
+		return "redirect:/";
 	}
 }
