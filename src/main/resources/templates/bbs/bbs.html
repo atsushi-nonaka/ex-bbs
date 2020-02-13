@@ -14,19 +14,19 @@
 		<button>記事投稿</button>
 	</form>
 	
-	<form th:each="article : ${application.articleList}">
+	<form th:each="article : ${articleList}" >
 		<hr>
 		<div th:text="投稿ID： + ${article.id}"></div>
 		<div th:text="投稿者名： +  ${article.name}"></div>
 		<div th:text="投稿内容： +  ${article.content}"></div>
 		<button>記事削除</button>
+		<div th:each="comment : ${article.commentList}">
+			<div th:text="コメントID： + ${comment.id}"></div>
+			<div th:text="コメント名： + ${comment.name}"></div>
+			<div th:text="コメント内容： + ${comment.content}"></div>
+		</div>
+			
 	</form>
-	
-	<div>
-		<div></div>
-		<div></div>
-		<div></div>
-	</div>
 	
 	<form method="post">
 		名前：<input type="text" name="name"><br>
