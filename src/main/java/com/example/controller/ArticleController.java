@@ -49,12 +49,17 @@ public class ArticleController {
 	 */
 	@RequestMapping("")
 	public String index(Model model) {
-		List<Article> articleList = articleRepository.findAll();
+		/*List<Article> articleList = articleRepository.findAll();
 		for(Article article : articleList) {
 			List<Comment>commentList = commentRepository.findByArticleId(article.getId());
 			article.setCommentList(commentList);
 		}
-		model.addAttribute("articleList", articleList);		
+		model.addAttribute("articleList", articleList);*/
+		
+		//ここから中級課題
+		List<Article> articleList = articleRepository.findAllJoin();
+		model.addAttribute("articleList", articleList);
+		
 		return "bbs/bbs";
 	}
 	
@@ -85,5 +90,12 @@ public class ArticleController {
 		comment.setArticleId(commentForm.getIntArticleId());
 		commentRepository.insert(comment);
 		return "redirect:/";
+	}
+	
+	@RequestMapping("delete")
+	public String deleteArticle(CommentForm commentForm) {
+		commentRepository.deleteByArticleId(commentForm.getIntArticleId());
+	    articleRepository.deletedById(commentForm.getIntArticleId());
+	    return "redirect:/";
 	}
 }

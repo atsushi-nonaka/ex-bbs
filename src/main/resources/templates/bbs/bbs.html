@@ -16,10 +16,11 @@
 	
 	<div th:each="article : ${articleList}" >
 		<hr>
-		<form>
+		<form th:action="@{/delete}">
 			<div th:text="投稿ID： + ${article.id}"></div>
 			<div th:text="投稿者名： +  ${article.name}"></div>
 			<div th:text="投稿内容： +  ${article.content}"></div>
+			<input type="hidden" name="articleId" th:value="${article.id}">
 			<button>記事削除</button>
 		</form>
 		

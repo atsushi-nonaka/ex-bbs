@@ -51,9 +51,25 @@ public class CommentRepository {
 		return commentList;
 	}
 	
+	/**
+	 * コメントを登録する.
+	 * 
+	 * @param comment コメント
+	 */
 	public void insert(Comment comment) {
 		String sql = "INSERT INTO " + TABLE_NAME + "(name, content, article_id) VALUES(:name, :content, :articleId)";
 		SqlParameterSource param = new BeanPropertySqlParameterSource(comment);
+		template.update(sql, param);
+	}
+	
+	/**
+	 * コメントを削除する.
+	 * 
+	 * @param articleId 記事ID
+	 */
+	public void deleteByArticleId(int articleId) {
+		String sql ="DELETE FROM " + TABLE_NAME + " WHERE article_id = :article_id";
+		SqlParameterSource param = new MapSqlParameterSource().addValue("article_id", articleId);
 		template.update(sql, param);
 	}
 }
