@@ -47,9 +47,10 @@ public class ArticleRepository {
 		List<Comment> commentList = null;
 		int beforeArticleId = 0;
 		while(rs.next()) {
-			if(beforeArticleId != rs.getInt("art_id")) {
+			int nowArticleId = rs.getInt("art_id");
+			if(beforeArticleId != nowArticleId) {
 				Article article = new Article();				
-				article.setId(rs.getInt("art_id"));
+				article.setId(nowArticleId);
 				article.setName(rs.getString("art_name"));
 				article.setContent(rs.getString("art_content"));				
 				commentList = new ArrayList<>();
@@ -57,15 +58,17 @@ public class ArticleRepository {
 				articleList.add(article);
 			}
 			
-			Comment comment = new Comment();
-			comment.setId(rs.getInt("com_id"));
-			comment.setName(rs.getString("com_name"));
-			comment.setContent(rs.getString("com_content"));				
-			comment.setArticleId(rs.getInt("com_article_id"));
-			commentList.add(comment);	
-			System.out.println(commentList);
+			if(rs.getInt("com_id") != 0) {
+				Comment comment = new Comment();
+				comment.setId(rs.getInt("com_id"));
+				comment.setName(rs.getString("com_name"));
+				comment.setContent(rs.getString("com_content"));				
+				comment.setArticleId(rs.getInt("com_article_id"));
+				commentList.add(comment);																	
+			}
+				
 			
-			beforeArticleId = rs.getInt("art_id");
+			beforeArticleId = nowArticleId;
 		}
 		return articleList;
 	};
@@ -84,7 +87,7 @@ public class ArticleRepository {
 	//中級課題
 	public List<Article> findAllJoin(){
 		String sql = "SELECT art.id art_id, art.name art_name, art.content art_content, com.id com_id, com.name com_name, com.content com_content, com.article_id com_article_id "
-					 + "FROM articles art INNER JOIN comments com ON art.id = com.article_id ORDER BY art.id DESC, com.id DESC";
+					 + "FROM articles art LEFT OUTER JOIN comments com ON art.id = com.article_id ORDER BY art.id DESC, com.id DESC";
 		List<Article> articleList = template.query(sql, Article_RESULT_SET_EXTRACTOR);
 		return articleList;
 	}
@@ -96,6 +99,7 @@ public class ArticleRepository {
 	 */
 	public void insert(Article article) {
 		String sql = "INSERT INTO " + TABLE_NAME + "(name, content) VALUES(:name, :content)";
+		
 		SqlParameterSource param = new BeanPropertySqlParameterSource(article);
 		template.update(sql, param);
 	}
